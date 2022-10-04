@@ -30,9 +30,6 @@ def main():
         with engine.connect() as conn:
             conn.execute(t_documents.insert().values(ml_response=str(payload)))
 
-        # TODO:
-        # Convert this payload in dictionary to string and write it to the
-        # ml_response column of the documents table.
         time.sleep(3)
 
 

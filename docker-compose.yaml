@@ -281,13 +281,18 @@ services:
         condition: service_completed_successfully
 
   api:
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+      POSTGRES_HOST: postgres
     build:
       context: .
       dockerfile: ./dockerfiles/fastapi.dockerfile
     profiles:
       - fastapi
     ports:
-      - 80:8081
+      - 8081:8081
     healthcheck:
       test: [ "CMD", "curl", "--fail", "http://localhost:8081/api/status" ]
       interval: 10s
@@ -299,6 +304,11 @@ services:
         condition: service_healthy
 
   generator:
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+      POSTGRES_HOST: postgres
     build:
       context: .
       dockerfile: ./dockerfiles/generator.dockerfile

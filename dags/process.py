@@ -31,10 +31,10 @@ def add_prepared_doc(document_id: int, business_id: int, total: dict, processed:
 
 @dag(
     schedule=timedelta(minutes=1),
-    start_date=pendulum.now(),
+    start_date=pendulum.today(),
     catchup=False,
     tags=['main'],
-    is_paused_upon_creation=True,
+    is_paused_upon_creation=False,
 )
 def process_documents():
     """

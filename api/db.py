@@ -5,14 +5,12 @@ from sqlalchemy import (
     ARRAY, MetaData, Table
 )
 
-os.environ['POSTGRES_USER'] = 'airflow'
-os.environ['POSTGRES_PASSWORD'] = 'airflow'
-os.environ['POSTGRES_DB'] = 'airflow'
-
-conn_string = os.environ.get(
-    "AIRFLOW__DATABASE__SQL_ALCHEMY_CONN",
-    "postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}@localhost:5433/{POSTGRES_DB}".format(**os.environ)
-)
+conn_string = os.environ.get("AIRFLOW__DATABASE__SQL_ALCHEMY_CONN")
+if not conn_string:
+    conn_string = (
+        "postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}"
+        "@{POSTGRES_HOST}:5432/{POSTGRES_DB}".format(**os.environ)
+    )
 engine = create_engine(conn_string)
 metadata = MetaData(bind=engine)
 
@@ -23,7 +21,7 @@ t_documents = Table(
     'documents', metadata,
     Column('document_id', Integer, primary_key=True,
            server_default=text("nextval('documents_document_id_seq'::regclass)")),
-    Column('ml_response', String(2048)) # may be tuned
+    Column('ml_response', String(2048))  # may be tuned
 )
 
 t_parsed_total = Table(
